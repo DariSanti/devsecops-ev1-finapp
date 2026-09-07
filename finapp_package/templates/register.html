@@ -2,16 +2,89 @@
 {% block title %}Crear cuenta - FinApp{% endblock %}
 {% block content %}
 <h1>Crear cuenta nueva</h1>
-<form method="POST" autocomplete="off">
+<form method="POST" autocomplete="off" id="registerForm">
   <label for="username">Usuario</label>
   <input type="text" id="username" name="username" required maxlength="40" placeholder="jperez">
   <p class="hint">El correo se generará automáticamente como: usuario@finapp.cl</p>
 
   <label for="password">Contraseña</label>
-  <input type="password" id="password" name="password" required maxlength="80">
-  <p class="hint">Debe incluir mayúscula, minúscula, número y carácter especial; mínimo 10 caracteres.</p>
+  <div class="password-wrapper">
+    <input type="password" id="password" name="password" required maxlength="80">
+    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</button>
+  </div>
 
-  <button type="submit">Crear cuenta</button>
+  <ul class="requirements-list">
+    <li id="req-length">✖ Mínimo 10 caracteres</li>
+    <li id="req-upper">✖ Al menos una letra mayúscula</li>
+    <li id="req-lower">✖ Al menos una letra minúscula</li>
+    <li id="req-number">✖ Al menos un número</li>
+    <li id="req-special">✖ Al menos un carácter especial (@$!%*?&#)</li>
+  </ul>
+
+  <label for="confirm_password">Confirmar Contraseña</label>
+  <div class="password-wrapper">
+    <input type="password" id="confirm_password" name="confirm_password" required maxlength="80">
+    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirm_password', this)">👁️</button>
+  </div>
+  <p id="match-error" class="hint" style="color: #a52222; display: none;">Las contraseñas no coinciden.</p>
+
+  <button type="submit" id="submitBtn" disabled>Crear cuenta</button>
 </form>
+
 <p style="margin-top:16px;"><a href="{{ url_for('login') }}">Volver al inicio de sesión</a></p>
+
+<script>
+function togglePasswordVisibility(fieldId, btn) {
+  const input = document.getElementById(fieldId);
+  if (input.type === "password") {
+    input.type = "text";
+    btn.textContent = "🙈";
+  } else {
+    input.type = "password";
+    btn.textContent = "👁️";
+  }
+}
+
+const passInput = document.getElementById('password');
+const confirmInput = document.getElementById('confirm_password');
+const matchError = document.getElementById('match-error');
+const submitBtn = document.getElementById('submitBtn');
+
+const reqs = {
+  length: { re: /.{10,}/, el: document.getElementById('req-length') },
+  upper: { re: /[A-Z]/, el: document.getElementById('req-upper') },
+  lower: { re: /[a-z]/, el: document.getElementById('req-lower') },
+  number: { re: /[0-9]/, el: document.getElementById('req-number') },
+  special: { re: /[^A-Za-z0-9]/, el: document.getElementById('req-special') }
+};
+
+function validateForm() {
+  const val = passInput.value;
+  let allValid = true;
+
+  for (const key in reqs) {
+    const isValid = reqs[key].re.test(val);
+    if (isValid) {
+      reqs[key].el.classList.add('valid');
+      reqs[key].el.textContent = '✓ ' + reqs[key].el.textContent.substring(2);
+    } else {
+      reqs[key].el.classList.remove('valid');
+      reqs[key].el.textContent = '✖ ' + reqs[key].el.textContent.substring(2);
+      allValid = false;
+    }
+  }
+
+  const matches = val === confirmInput.value && confirmInput.value !== '';
+  if (confirmInput.value.length > 0 && !matches) {
+    matchError.style.display = 'block';
+  } else {
+    matchError.style.display = 'none';
+  }
+
+  submitBtn.disabled = !(allValid && matches);
+}
+
+passInput.addEventListener('input', validateForm);
+confirmInput.addEventListener('input', validateForm);
+</script>
 {% endblock %}

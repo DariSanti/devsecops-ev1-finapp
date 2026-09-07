@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Panel de Administración - FinApp{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+  <h1>Gestión de Usuarios y Roles</h1>
+  <a href="{{ url_for('register') }}" class="button-link" style="margin-top: 0;">+ Registrar nuevo usuario</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Usuario</th>
+      <th>Nombre</th>
+      <th>Correo Corporativo</th>
+      <th>Rol Actual</th>
+      <th>Modificar Rol</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in usuarios %}
+    <tr>
+      <td>{{ u['id'] }}</td>
+      <td><strong>{{ u['username'] }}</strong></td>
+      <td>{{ u['nombre'] }}</td>
+      <td>{{ u['email'] }}</td>
+      <td><span class="badge {{ u['role'] }}">{{ u['role'] }}</span></td>
+      <td>
+        {% if u['username'] != session['username'] %}
+        <form method="POST" action="{{ url_for('cambiar_rol', user_id=u['id']) }}" class="inline">
+          <select name="role" onchange="this.form.submit()" style="width: auto; padding: 4px 8px; margin: 0;">
+            <option value="empleado" {% if u['role'] == 'empleado' %}selected{% endif %}>Empleado</option>
+            <option value="aprobador" {% if u['role'] == 'aprobador' %}selected{% endif %}>Aprobador</option>
+            <option value="admin" {% if u['role'] == 'admin' %}selected{% endif %}>Administrador</option>
+          </select>
+        </form>
+        {% else %}
+        <span class="hint">(Tu cuenta)</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No hay usuarios registrados en el sistema.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

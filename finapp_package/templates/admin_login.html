@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Acceso Administrativo - FinApp{% endblock %}
+{% block content %}
+<h1 style="color: #a52222;">Portal de Administración</h1>
+<p style="margin-bottom: 20px; color: #6b7280;">Autenticación requerida para acceder al panel de gestión de usuarios y roles.</p>
+
+<form method="POST" autocomplete="off">
+  <label for="username">Usuario Administrador</label>
+  <input type="text" id="username" name="username" required maxlength="40">
+
+  <label for="password">Contraseña</label>
+  <div class="password-wrapper">
+    <input type="password" id="password" name="password" required maxlength="80">
+    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</button>
+  </div>
+
+  <button type="submit" style="background: #a52222;">Iniciar Sesión como Admin</button>
+</form>
+
+<p style="margin-top:20px;"><a href="{{ url_for('login') }}">Volver al login de empleados</a></p>
+
+<script>
+function togglePasswordVisibility(fieldId, btn) {
+  const input = document.getElementById(fieldId);
+  if (input.type === "password") {
+    input.type = "text";
+    btn.textContent = "🙈";
+  } else {
+    input.type = "password";
+    btn.textContent = "👁️";
+  }
+}
+</script>
+{% endblock %}
