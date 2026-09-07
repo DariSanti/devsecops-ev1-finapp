@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Vista Empleado - FinApp{% endblock %}
+{% block content %}
+<h1>Nueva solicitud de reembolso</h1>
+<form method="POST" enctype="multipart/form-data" autocomplete="off">
+  <label for="rut">RUT</label>
+  <input type="text" id="rut" name="rut" placeholder="12345678-9" required>
+  <p class="hint">Se valida formato y dígito verificador (algoritmo Módulo 11).</p>
+
+  <label for="email">Correo corporativo</label>
+  <input type="email" id="email" name="email" placeholder="nombre@finapp.cl" required>
+
+  <label for="monto">Monto a reembolsar (CLP)</label>
+  <input type="text" id="monto" name="monto" placeholder="Ej: 45000" required>
+  <p class="hint">Solo números enteros, entre 1 y 5.000.000.</p>
+
+  <label for="descripcion">Descripción del gasto</label>
+  <textarea id="descripcion" name="descripcion" rows="3" maxlength="300"></textarea>
+
+  <label for="comprobante">Comprobante (PNG, JPG o PDF, máx. 3MB)</label>
+  <input type="file" id="comprobante" name="comprobante" accept=".png,.jpg,.jpeg,.pdf" required>
+
+  <button type="submit">Enviar solicitud</button>
+</form>
+
+<h1 style="margin-top:32px;">Mis solicitudes</h1>
+<table>
+  <tr><th>ID</th><th>Monto</th><th>Descripción</th><th>Estado</th><th>Fecha</th></tr>
+  {% for r in reembolsos %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>${{ "{:,}".format(r.monto).replace(",", ".") }}</td>
+    <td>{{ r.descripcion }}</td>
+    <td><span class="badge {{ r.estado }}">{{ r.estado }}</span></td>
+    <td>{{ r.fecha }}</td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">Sin solicitudes aún.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

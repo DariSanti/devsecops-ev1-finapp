@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Registrar usuarios - FinApp{% endblock %}
+{% block content %}
+<h1>Registrar usuarios</h1>
+<form method="POST" autocomplete="off">
+  <label for="username">Usuario</label>
+  <input type="text" id="username" name="username" required maxlength="40">
+
+  <label for="nombre">Nombre completo</label>
+  <input type="text" id="nombre" name="nombre" required maxlength="80">
+
+  <label for="email">Correo corporativo</label>
+  <input type="email" id="email" name="email" placeholder="nombre@finapp.cl" required>
+
+  <label for="password">Contraseña</label>
+  <input type="password" id="password" name="password" required maxlength="80">
+  <p class="hint">Debe incluir mayúscula, minúscula, número y carácter especial; mínimo 10 caracteres.</p>
+
+  <label for="role">Rol</label>
+  <select id="role" name="role" required>
+    <option value="empleado">Empleado</option>
+    <option value="aprobador">Aprobador</option>
+  </select>
+
+  <button type="submit">Registrar usuario</button>
+</form>
+
+<h2 style="margin-top:32px;">Usuarios registrados</h2>
+<table>
+  <tr><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Correo</th></tr>
+  {% for u in usuarios %}
+  <tr>
+    <td>{{ u.username }}</td>
+    <td>{{ u.nombre }}</td>
+    <td>{{ u.role }}</td>
+    <td>{{ u.email }}</td>
+  </tr>
+  {% else %}
+  <tr><td colspan="4">Sin usuarios registrados.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

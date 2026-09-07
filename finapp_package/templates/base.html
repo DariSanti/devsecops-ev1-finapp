@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}FinApp{% endblock %}</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; background:#f2f4f7; margin:0; color:#1c2430; }
+  header { background:#0b2540; color:#fff; padding:16px 32px; display:flex; justify-content:space-between; align-items:center; }
+  header a { color:#fff; text-decoration:none; }
+  main { max-width:760px; margin:32px auto; background:#fff; padding:32px; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  h1 { font-size:1.4rem; margin-top:0; }
+  label { display:block; margin:14px 0 4px; font-weight:600; font-size:.9rem; }
+  input, textarea { width:100%; padding:9px 10px; border:1px solid #cbd2d9; border-radius:6px; font-size:.95rem; }
+  button { margin-top:20px; background:#155ea6; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer; font-size:.95rem; }
+  button:hover { background:#0e4680; }
+  .button-link {
+    display:inline-block;
+    margin-top:18px;
+    background:#eaf2ff;
+    color:#0b2540;
+    border:1px solid #bdd4f7;
+    padding:10px 18px;
+    border-radius:6px;
+    text-decoration:none;
+    font-size:.95rem;
+    font-weight:600;
+  }
+  .button-link:hover { background:#dfeeff; }
+  table { width:100%; border-collapse:collapse; margin-top:16px; font-size:.9rem; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid #e4e8ee; }
+  th { background:#eef2f7; }
+  .flash { padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:.9rem; }
+  .flash.error { background:#fdecea; color:#a52222; border:1px solid #f2b8b5; }
+  .flash.success { background:#e7f6ec; color:#1e7d3c; border:1px solid #b7e4c7; }
+  .badge { padding:2px 8px; border-radius:12px; font-size:.78rem; }
+  .badge.Pendiente { background:#fff3cd; color:#8a6d1f; }
+  .badge.Aprobado { background:#d4edda; color:#1e7d3c; }
+  .badge.Rechazado { background:#f8d7da; color:#a52222; }
+  form.inline { display:inline; }
+  .hint { color:#6b7280; font-size:.8rem; margin-top:2px; }
+</style>
+</head>
+<body>
+<header>
+  <strong>FinApp · Portal de Reembolsos</strong>
+  {% if session.get('username') %}
+    <span>{{ session['nombre'] }} ({{ session['role'] }}) · <a href="{{ url_for('logout') }}">Cerrar sesión</a></span>
+  {% endif %}
+</header>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in messages %}
+      <div class="flash {{ category }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

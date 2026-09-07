@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Vista Aprobador - FinApp{% endblock %}
+{% block content %}
+<p style="margin-bottom:16px;"><a href="{{ url_for('registrar_usuario') }}">Registrar usuarios</a></p>
+<h1>Solicitudes de reembolso</h1>
+<table>
+  <tr><th>ID</th><th>Solicitante</th><th>RUT</th><th>Monto</th><th>Descripción</th><th>Estado</th><th>Acciones</th></tr>
+  {% for r in reembolsos %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.solicitante }}</td>
+    <td>{{ r.rut }}</td>
+    <td>${{ "{:,}".format(r.monto).replace(",", ".") }}</td>
+    <td>{{ r.descripcion }}</td>
+    <td><span class="badge {{ r.estado }}">{{ r.estado }}</span></td>
+    <td>
+      {% if r.estado == "Pendiente" %}
+      <form class="inline" method="POST" action="{{ url_for('resolver', reembolso_id=r.id, accion='aprobar') }}">
+        <button type="submit">Aprobar</button>
+      </form>
+      <form class="inline" method="POST" action="{{ url_for('resolver', reembolso_id=r.id, accion='rechazar') }}">
+        <button type="submit" style="background:#a52222;">Rechazar</button>
+      </form>
+      {% else %}—{% endif %}
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="7">No hay solicitudes registradas.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

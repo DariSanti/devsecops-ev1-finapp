@@ -1,0 +1,34 @@
+# =========================
+# Bases de Datos SQLite
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+db.sqlite3
+*.sqlite3-journal
+
+# =========================
+# Compilados de Python
+# =========================
+__pycache__/
+
+# =========================
+# Variables de Entorno y Secretos
+# =========================
+.env
+.env.local
+.env.*
+
+# =========================
+# Logs y Archivos de Testing
+# =========================
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Archivos del Sistema Operativo
+# =========================
+.DS_Store
+Thumbs.db
